@@ -103,7 +103,7 @@ class _MainState extends State<Main> {
                       MaterialStateProperty.all<Color>(Colors.orange),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
+                    borderRadius: BorderRadius.circular(16.0),
                     //side: BorderSide(color: Colors.red) // border line color
                   )),
                 ),
