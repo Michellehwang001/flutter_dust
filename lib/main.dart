@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.yellow,
+        primarySwatch: Colors.blue,
       ),
       home: Main(),
     );
@@ -31,8 +31,11 @@ class _MainState extends State<Main> {
   AirResult _result;
 
   Future<AirResult> fetchData() async {
-    var response = await http.get(
+    var uri = Uri.parse(
         'https://api.airvisual.com/v2/nearest_city?key=4e4a2b11-55a1-4f0c-839a-2dd00e9de7d7');
+    var response = await http.get(uri);
+    // var response = await http.get(
+    //     'https://api.airvisual.com/v2/nearest_city?key=4e4a2b11-55a1-4f0c-839a-2dd00e9de7d7');
     AirResult result = AirResult.fromJson(json.decode(response.body));
 
     return result;
