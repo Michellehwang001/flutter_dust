@@ -1,25 +1,28 @@
+import 'package:dust/air_provider.dart';
 import 'package:dust/bloc/air_bloc.dart';
 import 'package:dust/models/AirResult.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 // 최상위 변수로 Bloc 선언
-final airBloc = AirBloc();
+//final airBloc = AirBloc();
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Main(),
+    return MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => AirProvider(),),
+    ],
+      child: Consumer<AirProvider>(
+        builder: (context, airResult, _),
+      )
     );
+
   }
 }
 
@@ -29,6 +32,8 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> {
+  final airResult = Provider.of<AirProvider>(context);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
