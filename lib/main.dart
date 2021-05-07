@@ -1,13 +1,19 @@
-import 'package:dust/bloc/air_bloc.dart';
+import 'package:dust/bloc/air_provider.dart';
 import 'package:dust/models/AirResult.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+// Provider 생성
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AirProvider() ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
-
-// 최상위 변수로 Bloc 선언
-final airBloc = AirBloc();
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -30,21 +36,28 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    // 시작하면서 fetchData() 를 실행한다. fetchData는 void
+    Provider.of<AirProvider>(context, listen: false).fetchData();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    //Provider를 제공받는다.
+    AirProvider airProvider = Provider.of<AirProvider>(context);
+    AirResult result = airProvider.result;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('미세먼지앱'),
       ),
       body: Center(
-        child: StreamBuilder<AirResult>(
-            stream: airBloc.airResult,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return buildBody(snapshot.data);
-              } else {
-                return CircularProgressIndicator();
-              }
-            }),
+        child: airProvider.isLoading
+            ? CircularProgressIndicator()
+            : buildBody(result),
       ),
     );
   }
@@ -117,8 +130,8 @@ class _MainState extends State<Main> {
             ),
             ElevatedButton(
               onPressed: () {
+                // 다시 fetch() 불러야 함.
                 print('fetch()');
-                airBloc.fetch();
               },
               child: Icon(Icons.refresh),
               style: ButtonStyle(
